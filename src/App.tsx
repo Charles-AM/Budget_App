@@ -162,6 +162,10 @@ function BudgetShell({ user, onLogout }: BudgetShellProps) {
           <CategoryBudget budgets={budgets} onSetBudget={setBudget} />
         </aside>
       </div>
+
+      <footer className="mx-auto mt-10 max-w-7xl pb-6 text-center text-xs text-slate-500">
+        Built by Charles Appiah Manu
+      </footer>
     </main>
   );
 }
