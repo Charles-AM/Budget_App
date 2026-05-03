@@ -5,7 +5,7 @@ A personal budgeting web app built with React, Vite, TypeScript, Tailwind CSS, D
 ## System updates
 
 - Dark blue, gradient-rich UI with glow accents and compact widgets.
-- Dummy login screen with persisted profile and per-user data scoping.
+- Dummy login screen with profile.
 - Budget assistant widget with warnings and quick actions.
 - Clear-month action that resets budgets and removes all transactions for the selected month.
 
@@ -36,13 +36,3 @@ This repository already includes the finished files, so from this folder you can
 npm install
 npm run dev
 ```
-
-## Deploy
-
-Build with:
-
-```bash
-npm run build
-```
-
-Deploy the generated `dist` folder to Netlify, or push the project to GitHub and point GitHub Pages at the Vite build output. For GitHub Pages under a repo subpath, set Vite's `base` option to `"/your-repo-name/"` in `vite.config.ts`.
