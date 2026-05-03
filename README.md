@@ -36,3 +36,6 @@ This repository already includes the finished files, so from this folder you can
 npm install
 npm run dev
 ```
+## Live Demo
+https://the-budget-maestro.netlify.app/
+
