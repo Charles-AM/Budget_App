@@ -33,10 +33,10 @@ export function Login({ onLogin, initialProfile }: LoginProps) {
         <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-              Vault Login
+              Maestro Login
             </p>
             <h1 className="font-display mt-3 text-3xl font-semibold text-slate-100">
-              Welcome back to Budget Vault
+              Welcome back to Budget Maestro
             </h1>
             <p className="mt-2 text-sm text-slate-400">
               Sign in to load your private budgeting timeline and insights dashboard.
