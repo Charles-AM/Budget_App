@@ -1,6 +1,22 @@
 # Personal Budgeting App
 
-A one-day personal budgeting web app built with React, Vite, TypeScript, Tailwind CSS, Dexie/IndexedDB, and Recharts. It is fully client-side and stores data in the browser.
+A personal budgeting web app built with React, Vite, TypeScript, Tailwind CSS, Dexie/IndexedDB, and Recharts. It is fully client-side and stores data in the browser.
+
+## System updates
+
+- Dark blue, gradient-rich UI with glow accents and compact widgets.
+- Dummy login screen with persisted profile and per-user data scoping.
+- Budget assistant widget with warnings and quick actions.
+- Clear-month action that resets budgets and removes all transactions for the selected month.
+
+## Core functionality
+
+- Add, edit, and delete income or expense transactions.
+- Filter transactions by category or date.
+- Monthly category budgets with progress tracking.
+- Spending breakdown chart and recent activity list.
+- Quick actions for common transaction entries.
+- Local-only storage (no backend).
 
 ## Run locally
 
