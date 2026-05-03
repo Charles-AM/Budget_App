@@ -59,25 +59,37 @@ export function useBudget(userKey: string) {
   const [budgets, setBudgets] = useState<CategoryBudget[]>(defaultBudgets);
   const [selectedMonth, setSelectedMonth] = useState(getMonthKey(new Date()));
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const [savedTransactions, savedBudgets] = await Promise.all([
-      db.transactions.orderBy("date").reverse().toArray(),
-      db.budgets.toArray(),
-    ]);
+    try {
+      await db.open();
+      const [savedTransactions, savedBudgets] = await Promise.all([
+        db.transactions.orderBy("date").reverse().toArray(),
+        db.budgets.toArray(),
+      ]);
 
-    if (savedBudgets.length === 0) {
-      await db.budgets.bulkPut(defaultBudgets);
-      setBudgets(defaultBudgets);
-    } else {
-      const budgetMap = new Map(savedBudgets.map((item) => [item.category, item]));
-      setBudgets(
-        CATEGORIES.map((category) => budgetMap.get(category) ?? { category, amount: 0 }),
-      );
+      if (savedBudgets.length === 0) {
+        await db.budgets.bulkPut(defaultBudgets);
+        setBudgets(defaultBudgets);
+      } else {
+        const budgetMap = new Map(savedBudgets.map((item) => [item.category, item]));
+        setBudgets(
+          CATEGORIES.map((category) => budgetMap.get(category) ?? { category, amount: 0 }),
+        );
+      }
+
+      setTransactions(savedTransactions);
+      setError(null);
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Unable to load budget data.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
-
-    setTransactions(savedTransactions);
-    setIsLoading(false);
   }, [db]);
 
   useEffect(() => {
@@ -86,6 +98,20 @@ export function useBudget(userKey: string) {
     return () => {
       db.close();
     };
+  }, [db, refresh]);
+
+  const reload = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    await refresh();
+  }, [refresh]);
+
+  const resetDatabase = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    await db.delete();
+    await db.open();
+    await refresh();
   }, [db, refresh]);
 
   const addTransaction = useCallback(
@@ -185,6 +211,9 @@ export function useBudget(userKey: string) {
     remainingBudgetOverall,
     selectedMonth,
     clearMonth,
+    error,
+    reload,
+    resetDatabase,
     setBudget,
     setSelectedMonth,
     spendingByCategory,

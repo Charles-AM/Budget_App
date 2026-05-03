@@ -34,6 +34,9 @@ export default function App() {
     remainingBudgetOverall,
     selectedMonth,
     clearMonth,
+    error,
+    reload,
+    resetDatabase,
     setBudget,
     setSelectedMonth,
     spendingByCategory,
@@ -91,6 +94,27 @@ export default function App() {
 
   if (!user) {
     return <Login onLogin={handleLogin} />;
+  }
+
+  if (error) {
+    return (
+      <main className="flex min-h-screen items-center justify-center p-6">
+        <div className="surface glow-border w-full max-w-lg p-6 text-center">
+          <h2 className="font-display text-2xl text-slate-100">Budget load failed</h2>
+          <p className="mt-2 text-sm text-slate-400">
+            {error}. Try again, or reset local data if storage is blocked.
+          </p>
+          <div className="mt-5 grid gap-3">
+            <button type="button" className="glow-button" onClick={reload}>
+              Try again
+            </button>
+            <button type="button" className="mini-danger" onClick={resetDatabase}>
+              Reset local data
+            </button>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   if (isLoading) {
