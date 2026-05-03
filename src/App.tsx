@@ -14,16 +14,12 @@ type UserProfile = {
 
 const storageKey = "budgetUserProfile";
 
-export default function App() {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    try {
-      const stored = localStorage.getItem(storageKey);
-      return stored ? (JSON.parse(stored) as UserProfile) : null;
-    } catch {
-      return null;
-    }
-  });
+type BudgetShellProps = {
+  user: UserProfile;
+  onLogout: () => void;
+};
 
+function BudgetShell({ user, onLogout }: BudgetShellProps) {
   const {
     addTransaction,
     budgets,
@@ -44,7 +40,7 @@ export default function App() {
     totalSpentThisMonth,
     transactions,
     updateTransaction,
-  } = useBudget(user?.email ?? "guest");
+  } = useBudget(user.email);
 
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
@@ -56,16 +52,6 @@ export default function App() {
     }
 
     await addTransaction(transaction);
-  };
-
-  const handleLogin = (profile: UserProfile) => {
-    localStorage.setItem(storageKey, JSON.stringify(profile));
-    setUser(profile);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem(storageKey);
-    setUser(null);
   };
 
   const handleQuickAdd = (data: { amount: number; category: Transaction["category"]; description: string }) => {
@@ -91,10 +77,6 @@ export default function App() {
     if (!confirmed) return;
     await clearMonth(selectedMonth);
   };
-
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   if (error) {
     return (
@@ -139,7 +121,7 @@ export default function App() {
           </h1>
           <p className="text-sm text-slate-400">{user.email}</p>
         </div>
-        <button type="button" onClick={handleLogout} className="ghost-button">
+        <button type="button" onClick={onLogout} className="ghost-button">
           Sign out
         </button>
       </div>
@@ -182,4 +164,30 @@ export default function App() {
       </div>
     </main>
   );
+}
+
+export default function App() {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [savedProfile] = useState<UserProfile | null>(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      return stored ? (JSON.parse(stored) as UserProfile) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogin = (profile: UserProfile) => {
+    localStorage.setItem(storageKey, JSON.stringify(profile));
+    setUser(profile);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+  if (!user) {
+    return <Login onLogin={handleLogin} initialProfile={savedProfile} />;
+  }
+
+  return <BudgetShell user={user} onLogout={handleLogout} />;
 }

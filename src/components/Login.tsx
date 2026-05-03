@@ -2,6 +2,7 @@ import { type FormEvent, useState } from "react";
 
 type LoginProps = {
   onLogin: (user: { name: string; email: string }) => void;
+  initialProfile?: { name: string; email: string } | null;
 };
 
 const demoUser = {
@@ -9,9 +10,10 @@ const demoUser = {
   email: "ava.bennett@example.com",
 };
 
-export function Login({ onLogin }: LoginProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+export function Login({ onLogin, initialProfile }: LoginProps) {
+  const [name, setName] = useState(initialProfile?.name ?? "");
+  const [email, setEmail] = useState(initialProfile?.email ?? "");
+  const hasSaved = Boolean(initialProfile?.email);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,6 +41,11 @@ export function Login({ onLogin }: LoginProps) {
             <p className="mt-2 text-sm text-slate-400">
               Sign in to load your private budgeting timeline and insights dashboard.
             </p>
+            {hasSaved && (
+              <p className="mt-3 text-sm text-slate-300">
+                We prefilled your last profile. Sign in to continue.
+              </p>
+            )}
             <div className="mt-6 space-y-3 text-sm text-slate-300">
               <div className="flex items-center gap-3">
                 <span className="pulse-dot" />
